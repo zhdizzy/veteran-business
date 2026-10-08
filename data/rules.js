@@ -39,25 +39,28 @@ export function monthlyComp(rating, spouse, children) {
    $1,440/yr single, $6,850/yr family. Same figures as transition-health and va-healthcare. */
 export const HEALTH_AVOIDED = { single: 1440, family: 6850, source: 'KFF 2025 Employer Health Benefits Survey (worker share of premiums)' };
 
-/* ─── VR&E subsistence allowance, FY2026, full-time, by dependents ──────────
-   Effective 10/1/2025. Source: benefits.va.gov/vocrehab/vrerates26.asp */
-export const VRE_FULLTIME = { 0: 812.84, 1: 1008.24, 2: 1188.15, addl: 86.58 };
+/* ─── VR&E subsistence allowance, FY2027, full-time, by dependents ──────────
+   Effective 10/1/2026 (3% CPI). Source: benefits.va.gov/vocrehab/vrerates27.asp (updated 9/30/26) */
+export const VRE_FULLTIME = { 0: 837.23, 1: 1038.49, 2: 1223.79, addl: 89.18 };
 export function vreMonthly(deps) { const d = Math.max(0, deps | 0); return d <= 2 ? VRE_FULLTIME[d] : VRE_FULLTIME[2] + VRE_FULLTIME.addl * (d - 2); }
-// Eligibility window: no time limit for discharges on/after 1/1/2013 (Isakson-Roe, P.L. 116-315 §1017).
+// Eligibility window: no time limit for discharges on/after 1/1/2013 (Isakson-Roe, P.L. 116-315 § 1025(a)).
 // Pre-2013 discharges: 12 years from the LATER of separation or first rating notice (38 CFR 21.41).
 export const VRE_NO_LIMIT_DISCHARGE_YEAR = 2013;
 export const VRE_WINDOW_YEARS = 12;
 
-/* ─── SBA 7(a) upfront guaranty fees, FY2026 (10/1/2025 to 9/30/2026) ───────
-   SBA Information Notice 5000-872051 (issued 8/28/2025).
+/* ─── SBA 7(a) upfront guaranty fees, FY2027 (10/1/2026 to 9/30/2027) ───────
+   SBA Information Notice 5000-881797 (issued 9/3/2026). Same schedule as FY2026 (Notice 5000-872051):
+   2% to $150K, 3% to $700K, 3.5% above (3.75% on the guaranteed portion over $1M), 0.55% annual service fee.
+   FY2027 also sets 0% upfront on loans of $700K or less to manufacturers (NAICS 31-33), specified food
+   supply-chain codes, and rural businesses; not modeled here (veteran-specific tool).
    Rates apply to the GUARANTEED portion. Express guaranty is 50%; standard 7(a) guaranty is 85% up to $150K, 75% above.
    Veterans: 0% on SBA Express (statutory, Small Business Act §7(a)(31)(G)) for businesses owned and controlled by
    veterans, active-duty members in TAP, reservists, Guard, and their spouses (and surviving spouses of members who died
    in service or of a service-connected disability). Veterans Advantage reductions on non-Express 7(a) are NOT in the
-   FY2026 notice as verified 9/22/26; the field below is 0 until a notice says otherwise. */
+   FY2027 notice as verified 10/7/26; the field below is 0 until a notice says otherwise. */
 export const SBA_FEES = {
-  fy: 2026, notice: '5000-872051',
-  noticeUrl: 'https://www.sba.gov/document/information-notice-5000-872051-7a-fees-effective-october-1-2025-fiscal-year-2026',
+  fy: 2027, notice: '5000-881797',
+  noticeUrl: 'https://www.sba.gov/document/information-notice-5000-881797-fy-2027-7a-program-fees',
   expressMax: 500000, expressGuaranty: 0.50,
   standardGuaranty: (loan) => loan <= 150000 ? 0.85 : 0.75,
   standardMax: 5000000,
@@ -90,7 +93,7 @@ export const GOVWIDE = {
   sourceUrl: 'https://www.sba.gov/article/2026/06/25/sba-releases-fy25-scorecard-small-business-contracting',
 };
 export const SOLE_SOURCE = {
-  farOther: 5000000,        // FAR 19.1406, non-manufacturing, after the 10/1/2025 inflation adjustment (verify each October)
+  farOther: 5000000,        // FAR 19.1406, non-manufacturing, after the 10/1/2025 inflation adjustment (41 U.S.C. 1908: adjusts every 5 years, next 10/1/2030; re-verified 10/7/26)
   farManufacturing: 8500000,
   va: 5000000,              // 38 U.S.C. 8127(c), statutory, VAAR 819.7008
   farUrl: 'https://www.acquisition.gov/far/19.1406',
